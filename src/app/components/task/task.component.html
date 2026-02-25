@@ -1,0 +1,148 @@
+<div class="container mt-4">
+
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <h5 class="card-title mb-3">Task List</h5>
+
+      <div class="row mb-3 align-items-end">
+
+        <div class="col-md-4">
+          <input type="text" class="form-control" placeholder="Search by Title / Description / Created By"
+            [(ngModel)]="searchKeyword" name="searchKeyword">
+        </div>
+
+        <div class="col-md-2">
+          <button class="btn btn-primary w-100" (click)="search()">
+            Search
+          </button>
+        </div>
+
+        <div class="col-md-2">
+          <button class="btn btn-secondary w-100" (click)="resetSearch()">
+            Reset
+          </button>
+        </div>
+
+        <div class="col-md-1 ms-auto">
+          <button class="btn btn-success w-100" (click)="openAddModal()">
+            <i class="bi bi-plus-circle"></i>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Table -->
+      <div class="table-responsive">
+        <table class="table table-bordered table-striped table-hover align-middle">
+          <thead class="table-dark text-center">
+            <tr>
+              <th>Id</th>
+              <th>Title</th>
+              <th>Description</th>
+              <th>Due Date</th>
+              <th>Status</th>
+              <th>Remarks</th>
+              <th>Created On</th>
+              <th>Last Updated On</th>
+              <th>Created By</th>
+              <th>Last Updated By</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let task of tasks">
+              <td>{{ task.id }}</td>
+              <td>{{ task.title }}</td>
+              <td>{{ task.description || '-' }}</td>
+              <td class="text-nowrap">{{ task.dueDate ? (task.dueDate | date:'dd-M-yy') : '-' }}</td>
+              <td>{{ task.status || '-' }}</td>
+              <td>{{ task.remarks || '-' }}</td>
+              <td>{{ task.createdOn ? (task.createdOn | date:'short') : '-' }}</td>
+              <td>{{ task.lastUpdatedOn ? (task.lastUpdatedOn | date:'short') : '-' }}</td>
+              <td>{{ task.createdBy || '-' }}</td>
+              <td>{{ task.lastUpdatedBy || '-' }}</td>
+              <td class="text-center py-0">
+                <button class="btn btn-primary btn-sm me-2 mb-0 p-1" (click)="editTasks(task)" title="Edit">
+                  <i class="bi bi-pencil"></i>
+                </button>
+                <button class="btn btn-danger btn-sm mb-0 p-1" (click)="deleteTask(task.id)" title="Delete">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <!-- Task Modal -->
+      <div class="modal fade" id="taskModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+
+            <div class="modal-header">
+              <h5 class="modal-title">
+                {{ isEditMode ? 'Update Task' : 'Add Task' }}
+              </h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <form (ngSubmit)="isEditMode ? updateTask() : addTask()">
+
+              <div class="modal-body">
+                <div class="row g-3">
+
+                  <div class="col-md-6">
+                    <label class="form-label">Title</label>
+                    <input type="text" class="form-control" [(ngModel)]="taskForm.title" name="title" required>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label class="form-label">Description</label>
+                    <input type="text" class="form-control" [(ngModel)]="taskForm.description" name="description">
+                  </div>
+
+                  <div class="col-md-4">
+                    <label class="form-label">Due Date</label>
+                    <input type="date" class="form-control" [(ngModel)]="taskForm.dueDate" name="dueDate" required>
+                  </div>
+
+                  <div class="col-md-4">
+                    <label class="form-label">Status</label>
+                    <input type="text" class="form-control" [(ngModel)]="taskForm.status" name="status">
+                  </div>
+
+                  <div class="col-md-4">
+                    <label class="form-label">Remarks</label>
+                    <input type="text" class="form-control" [(ngModel)]="taskForm.remarks" name="remarks">
+                  </div>
+
+                  <div class="col-md-6">
+                    <label class="form-label">Created By</label>
+                    <input type="text" class="form-control" [(ngModel)]="taskForm.createdBy" name="createdBy">
+                  </div>
+
+                  <div class="col-md-6">
+                    <label class="form-label">Last Updated By</label>
+                    <input type="text" class="form-control" [(ngModel)]="taskForm.lastUpdatedBy" name="lastUpdatedBy">
+                  </div>
+
+                </div>
+              </div>
+
+              <div class="modal-footer">
+                <button type="submit" class="btn btn-success">
+                  {{ isEditMode ? 'Update' : 'Add' }}
+                </button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="cancelEdit()">
+                  Cancel
+                </button>
+              </div>
+
+            </form>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
